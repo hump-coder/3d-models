@@ -20,6 +20,9 @@ tab_height = 5;
 // centre of the plate (positive is up)
 tab_positions = [23, 0, -23];
 
+// Radius for rounding outer corners
+corner_radius = 2;
+
 // Screw hole measurements
 hole_spacing = 40;        // distance between hole centres
 hole_d      = 3;          // diameter of screw shaft
@@ -44,21 +47,25 @@ module backplate2d() {
     }
 }
 
-module countersunk_hole() {
-    // screw shaft
-    cylinder(h = thickness, d = hole_d, center=false);
-    // countersink
-    translate([0,0,thickness - csk_depth])
-        cylinder(h = csk_depth, d1 = csk_d, d2 = hole_d, center=false);
+// Apply rounding to the outer corners
+module rounded_backplate2d() {
+    offset(r = corner_radius)
+        offset(delta = -corner_radius)
+            backplate2d();
+}
+
+module tapered_hole() {
+    // Tapered opening for countersunk screw heads
+    cylinder(h = thickness, d1 = csk_d, d2 = hole_d, center=false);
 }
 
 // Create the 3D plate and remove the countersunk screw holes
 module backplate() {
     difference() {
-        linear_extrude(thickness) backplate2d();
+        linear_extrude(thickness) rounded_backplate2d();
         for (i = [0:1]) {
             translate([0, plate_height/2 - top_to_first_hole - i*hole_spacing, 0])
-                countersunk_hole();
+                tapered_hole();
         }
     }
 }
