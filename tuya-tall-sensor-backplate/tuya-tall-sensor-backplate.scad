@@ -41,18 +41,27 @@ module backplate2d() {
         // wider bottom section
         translate([0, -plate_height/2 + wide_height/2])
             square([wide_width, wide_height], center=true);
-        // guiding tabs
-        for (y = tab_positions)
-            translate([0, y])
-                square([tab_width, tab_height], center=true);
     }
 }
 
-// Apply rounding to the outer corners
+module tabs2d() {
+    for (y = tab_positions)
+        translate([0, y])
+            square([tab_width, tab_height], center=true);
+}
+
+// Apply rounding to the outer corners of the main plate
 module rounded_backplate2d() {
     offset(r = corner_radius)
         offset(delta = -corner_radius)
             backplate2d();
+}
+
+// Rounded profiles for tabs
+module rounded_tabs2d() {
+    offset(r = corner_radius)
+        offset(delta = -corner_radius)
+            tabs2d();
 }
 
 module tapered_hole() {
@@ -63,7 +72,10 @@ module tapered_hole() {
 // Create the 3D plate and remove the countersunk screw holes
 module backplate() {
     difference() {
-        linear_extrude(thickness) rounded_backplate2d();
+        union() {
+            linear_extrude(thickness) rounded_backplate2d();
+            linear_extrude(thickness/2) rounded_tabs2d();
+        }
         for (i = [0:1]) {
             translate([0, plate_height/2 - top_to_first_hole - i*hole_spacing, 0])
                 tapered_hole();
