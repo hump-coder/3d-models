@@ -12,9 +12,9 @@ wide_width  = 25;
 wide_height = 12;
 
 // Small side tabs used as guides
-// These expand the width to 22.8 mm at three locations
-// along the height of the plate
-tab_width  = 22.8;
+// Each tab extends from one edge to the midpoint of the plate
+// at three locations along its height
+tab_width  = plate_width / 2;
 tab_height = 5;
 // y positions for the centre of each tab relative to the
 // centre of the plate (positive is up)
@@ -41,8 +41,10 @@ module backplate2d() {
         translate([0, -plate_height/2 + wide_height/2])
             square([wide_width, wide_height], center=true);
         // guiding tabs
+        // positioned so that they start from the right edge and
+        // extend halfway across the plate
         for (y = tab_positions)
-            translate([0, y])
+            translate([plate_width/2 - tab_width/2, y])
                 square([tab_width, tab_height], center=true);
     }
 }
