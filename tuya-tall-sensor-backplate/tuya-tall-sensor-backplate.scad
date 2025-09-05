@@ -1,0 +1,67 @@
+$fn = 64;
+
+// Thickness of the plate
+thickness = 1.5;
+
+// Overall plate dimensions
+plate_height = 69.5;
+plate_width  = 21.8;
+
+// Dimensions of the wider bottom section
+wide_width  = 25;
+wide_height = 12;
+
+// Small side tabs used as guides
+// These expand the width to 22.8 mm at three locations
+// along the height of the plate
+tab_width  = 22.8;
+tab_height = 5;
+// y positions for the centre of each tab relative to the
+// centre of the plate (positive is up)
+tab_positions = [23, 0, -23];
+
+// Screw hole measurements
+hole_spacing = 40;        // distance between hole centres
+hole_d      = 3;          // diameter of screw shaft
+csk_d       = 5.5;        // diameter of countersunk head
+csk_depth   = 1;          // depth of countersink
+
+// Distance from top edge to centre of first screw hole
+// (used to place both holes)
+top_to_first_hole = 13;
+
+module backplate2d() {
+    union() {
+        // main rectangle
+        square([plate_width, plate_height], center=true);
+        // wider bottom section
+        translate([0, -plate_height/2 + wide_height/2])
+            square([wide_width, wide_height], center=true);
+        // guiding tabs
+        for (y = tab_positions)
+            translate([0, y])
+                square([tab_width, tab_height], center=true);
+    }
+}
+
+module countersunk_hole() {
+    // screw shaft
+    cylinder(h = thickness, d = hole_d, center=false);
+    // countersink
+    translate([0,0,thickness - csk_depth])
+        cylinder(h = csk_depth, d1 = csk_d, d2 = hole_d, center=false);
+}
+
+// Create the 3D plate and remove the countersunk screw holes
+module backplate() {
+    difference() {
+        linear_extrude(thickness) backplate2d();
+        for (i = [0:1]) {
+            translate([0, plate_height/2 - top_to_first_hole - i*hole_spacing, 0])
+                countersunk_hole();
+        }
+    }
+}
+
+// Render the backplate
+backplate();
