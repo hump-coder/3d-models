@@ -61,9 +61,22 @@ module bottom_left_ridge() {
         cube([bl_ridge_size[0], bl_ridge_size[1], plate_thickness], center=false);
 }
 
+// Circular ridge with recessed centre
+module circle_ridge() {
+    translate([plate_width/2, circle_center_y, 0])
+        difference() {
+            // outer ring at full height
+            cylinder(h = plate_thickness, d = circle_d, center=false);
+            // recessed centre leaving a ridge equal to "ridge"
+            translate([0, 0, plate_thickness - inset_depth])
+                cylinder(h = inset_depth, d = circle_d - 2*ridge, center=false);
+        }
+}
+
 union() {
     base_plate();
     right_ridge();
     bottom_left_ridge();
+    circle_ridge();
     posts();
 }
