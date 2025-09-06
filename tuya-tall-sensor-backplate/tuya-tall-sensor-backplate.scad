@@ -51,19 +51,19 @@ module tabs2d() {
 }
 
 // Apply rounding to the outer corners of the main plate
-// except for the top-left and bottom-right corners which remain square
+// except for the top-right and bottom-left corners which remain square
 module rounded_backplate2d() {
     union() {
         offset(r = corner_radius)
             offset(delta = -corner_radius)
                 backplate2d();
 
-        // Restore square corner at top-left of the narrow section
-        translate([-plate_width/2, plate_height/2 - corner_radius])
+        // Restore square corner at top-right of the narrow section
+        translate([plate_width/2 - corner_radius, plate_height/2 - corner_radius])
             square([corner_radius, corner_radius]);
 
-        // Restore square corner at bottom-right of the wide section
-        translate([wide_width/2 - corner_radius, -plate_height/2])
+        // Restore square corner at bottom-left of the wide section
+        translate([-wide_width/2, -plate_height/2])
             square([corner_radius, corner_radius]);
     }
 }
