@@ -16,13 +16,13 @@ wide_height = 12;
 // at three locations along the height of the plate
 tab_extension = 0.5;                    // how far each tab extends beyond the plate
 tab_width  = plate_width + tab_extension * 2;
-tab_height = 5;
+tab_height = 8;
 // y positions for the centre of each tab relative to the
 // centre of the plate (positive is up)
-tab_positions = [23, 0, -23];
+tab_positions = [23, 0, -16];
 
 // Radius for rounding outer corners
-corner_radius = 2;
+corner_radius = 3;
 
 // Screw hole measurements
 hole_spacing = 40;        // distance between hole centres
