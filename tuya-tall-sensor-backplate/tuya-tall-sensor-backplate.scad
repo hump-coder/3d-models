@@ -85,7 +85,8 @@ module rounded_tabs2d() {
 
 module tapered_hole() {
     // Tapered opening for countersunk screw heads
-    cylinder(h = thickness, d1 = csk_d, d2 = hole_d, center=false);
+    cylinder(h = (thickness+back_support_thickness), csk_d, center=false);
+    cylinder(h = (thickness), d1 = csk_d, d2 = hole_d, center=false);
 }
 
 // Optional thicker back support with configurable offsets
