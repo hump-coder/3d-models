@@ -16,7 +16,7 @@ wide_height = 12;
 // at three locations along the height of the plate
 tab_extension = 0.5;                    // how far each tab extends beyond the plate
 tab_width  = plate_width + tab_extension * 2;
-tab_height = 8;
+tab_heights = [8, 8, 8];                // heights for tabs corresponding to tab_positions
 // y positions for the centre of each tab relative to the
 // centre of the plate (positive is up)
 tab_positions = [23, 0, -16];
@@ -45,9 +45,9 @@ module backplate2d() {
 }
 
 module tabs2d() {
-    for (y = tab_positions)
-        translate([0, y])
-            square([tab_width, tab_height], center=true);
+    for (i = [0:len(tab_positions)-1])
+        translate([0, tab_positions[i]])
+            square([tab_width, tab_heights[i]], center=true);
 }
 
 // Apply rounding to the outer corners of the main plate
