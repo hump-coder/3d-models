@@ -16,10 +16,10 @@ wide_height = 12;
 // at three locations along the height of the plate
 tab_extension = 0.5;                    // how far each tab extends beyond the plate
 tab_width  = plate_width + tab_extension * 2;
-tab_heights = [8, 8, 8];                // heights for tabs corresponding to tab_positions
+tab_heights = [9, 9, 16];                // heights for tabs corresponding to tab_positions
 // y positions for the centre of each tab relative to the
 // centre of the plate (positive is up)
-tab_positions = [23, 0, -16];
+tab_positions = [23, 0, -19];
 
 // Radius for rounding outer corners
 corner_radius = 3;
