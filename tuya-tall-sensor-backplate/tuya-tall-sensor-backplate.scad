@@ -4,9 +4,9 @@ $fn = 64;
 thickness = 1.5;
 
 // Optional thicker back support
-back_support_thickness   = 0;  // set to 0 to disable the extra support layer
-back_support_offset      = 0;  // border offset applied around the main plate
-back_support_wide_offset = 0;  // additional offset for the wider bottom section
+back_support_thickness   = 4;  // set to 0 to disable the extra support layer
+back_support_offset      = -2;  // border offset applied around the main plate
+back_support_wide_offset = 2;  // additional offset for the wider bottom section
 
 // Overall plate dimensions
 plate_height = 69.5;
