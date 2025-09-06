@@ -9,7 +9,7 @@ back_support_offset      = -2;  // border offset applied around the main plate
 back_support_wide_offset = 2;  // additional offset for the wider bottom section
 
 // Overall plate dimensions
-plate_height = 69.5;
+plate_height = 69.0;
 plate_width  = 21.8;
 
 // Dimensions of the wider bottom section
