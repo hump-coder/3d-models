@@ -3,6 +3,11 @@ $fn = 64;
 // Thickness of the plate
 thickness = 1.5;
 
+// Optional thicker back support
+back_support_thickness   = 0;  // set to 0 to disable the extra support layer
+back_support_offset      = 0;  // border offset applied around the main plate
+back_support_wide_offset = 0;  // additional offset for the wider bottom section
+
 // Overall plate dimensions
 plate_height = 69.5;
 plate_width  = 21.8;
@@ -34,13 +39,17 @@ csk_depth   = 1;          // depth of countersink
 // (used to place both holes)
 top_to_first_hole = 13;
 
+module wide_section2d() {
+    translate([0, -plate_height/2 + wide_height/2])
+        square([wide_width, wide_height], center=true);
+}
+
 module backplate2d() {
     union() {
         // main rectangle
         square([plate_width, plate_height], center=true);
         // wider bottom section
-        translate([0, -plate_height/2 + wide_height/2])
-            square([wide_width, wide_height], center=true);
+        wide_section2d();
     }
 }
 
@@ -79,12 +88,39 @@ module tapered_hole() {
     cylinder(h = thickness, d1 = csk_d, d2 = hole_d, center=false);
 }
 
+// Optional thicker back support with configurable offsets
+module back_support2d() {
+    union() {
+        offset(delta = back_support_offset) rounded_backplate2d();
+
+        difference() {
+            translate([0, -plate_height/2 + wide_height/2])
+                offset(r = corner_radius)
+                    offset(delta = -corner_radius)
+                        offset(delta = back_support_offset + back_support_wide_offset)
+                            square([wide_width, wide_height], center=true);
+
+            translate([0, -plate_height/2 + wide_height/2])
+                offset(r = corner_radius)
+                    offset(delta = -corner_radius)
+                        offset(delta = back_support_offset)
+                            square([wide_width, wide_height], center=true);
+
+            // Remove the top portion so edge 3 matches the main plate
+            translate([-(wide_width/2 + back_support_offset + back_support_wide_offset), -plate_height/2 + wide_height + back_support_offset])
+                square([wide_width + 2*(back_support_offset + back_support_wide_offset), back_support_wide_offset], center=false);
+        }
+    }
+}
+
 // Create the 3D plate and remove the countersunk screw holes
 module backplate() {
     difference() {
         union() {
             linear_extrude(thickness) rounded_backplate2d();
             linear_extrude(thickness/2) rounded_tabs2d();
+            if (back_support_thickness > 0)
+                linear_extrude(back_support_thickness) back_support2d();
         }
         for (i = [0:1]) {
             translate([0, plate_height/2 - top_to_first_hole - i*hole_spacing, 0])
