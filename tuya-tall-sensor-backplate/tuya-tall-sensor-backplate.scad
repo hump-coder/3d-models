@@ -58,13 +58,12 @@ module rounded_backplate2d() {
             offset(delta = -corner_radius)
                 backplate2d();
 
-        // Restore square corner at top-left of the narrow section
-        translate([-plate_width/2, plate_height/2 - corner_radius])
+        // Restore square corner at inside corner of the wide section
+        translate([wide_width/2 - corner_radius, (-plate_height/2) + (wide_height-corner_radius)])
+            square([corner_radius, corner_radius]);
+        translate([-wide_width/2, (-plate_height/2) + (wide_height-corner_radius)])
             square([corner_radius, corner_radius]);
 
-        // Restore square corner at bottom-right of the wide section
-        translate([wide_width/2 - corner_radius, -plate_height/2])
-            square([corner_radius, corner_radius]);
     }
 }
 
