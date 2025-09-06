@@ -9,9 +9,13 @@ plate_thickness = 7;
 inset_depth = 4;
 ridge = 3;
 
-// Approximate circular area that remains solid
+// Circular reference used for additional ridges
 circle_d = 30;
 circle_center_y = 28;
+
+// Ridge details
+right_ridge_height = 10;      // length of ridge joining circle to right wall
+bl_ridge_size = [6, 4];       // [width, height] of bottom-left ridge
 
 // Screw post parameters
 post_spacing = 24.6;        // distance between hole centres
@@ -25,13 +29,9 @@ module base_plate() {
         // full plate
         cube([plate_width, plate_height, plate_thickness], center=false);
 
-        // recessed interior leaving a circular plateau
+        // recessed interior
         translate([ridge, ridge, 0])
-            difference() {
-                cube([plate_width - 2*ridge, plate_height - 2*ridge, inset_depth], center=false);
-                translate([plate_width/2 - ridge, circle_center_y - ridge, -1])
-                    cylinder(d = circle_d, h = inset_depth + 2, center=false);
-            }
+            cube([plate_width - 2*ridge, plate_height - 2*ridge, inset_depth], center=false);
     }
 }
 
@@ -50,7 +50,20 @@ module posts() {
             screw_post();
 }
 
+module right_ridge() {
+    ridge_width = plate_width/2 - ridge - circle_d/2;
+    translate([plate_width/2 + circle_d/2, circle_center_y - right_ridge_height/2, 0])
+        cube([ridge_width, right_ridge_height, plate_thickness], center=false);
+}
+
+module bottom_left_ridge() {
+    translate([plate_width/2 - circle_d/2 - bl_ridge_size[0], ridge, 0])
+        cube([bl_ridge_size[0], bl_ridge_size[1], plate_thickness], center=false);
+}
+
 union() {
     base_plate();
+    right_ridge();
+    bottom_left_ridge();
     posts();
 }
