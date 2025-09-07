@@ -121,15 +121,14 @@ module back_support2d() {
 //  base_width  : dimension along the X axis
 //  base_depth  : how far the base extends from the backplate (Z axis)
 //  base_taper  : scaling factor applied to the bottom of the base
-module solid_base(base_height=0, base_width=25, base_depth=5, base_taper=1.2)
+module solid_base(base_height=0, base_width=20, base_depth=5, base_taper=1.2)
 {
     base_y = -plate_height/2 - base_height/2 + wide_height - 2;
 
     // Extrude the base downward and scale it to create the taper
-    translate([0, base_y, -base_depth])
-        linear_extrude(height = base_depth,
-                       scale   = [base_taper, base_taper])
-            offset(delta = back_support_offset + back_support_wide_offset)
+    translate([0, base_y, 0])
+        linear_extrude(height = base_depth, scale = [base_taper, base_taper])
+            offset(delta = (back_support_offset + back_support_wide_offset))
                 square([base_width, base_height], center=true);
 }
 
@@ -137,7 +136,7 @@ module solid_base(base_height=0, base_width=25, base_depth=5, base_taper=1.2)
 // solid_base_height : height of the optional tapered base
 // solid_base_depth  : how far the base extends from the plate
 // solid_base_taper  : scaling factor for the base's bottom
-module backplate(solid_base_height=15, solid_base_depth=5, solid_base_taper=1.2) {
+module backplate(solid_base_height=15, solid_base_width=20, solid_base_depth=5, solid_base_taper=1) {
     difference() {
         union() {
             linear_extrude(thickness) rounded_backplate2d();
@@ -146,7 +145,8 @@ module backplate(solid_base_height=15, solid_base_depth=5, solid_base_taper=1.2)
                 linear_extrude(back_support_thickness) back_support2d();
             solid_base(base_height = solid_base_height,
                        base_depth  = solid_base_depth,
-                       base_taper  = solid_base_taper);
+                       base_taper  = solid_base_taper,
+                       base_width  = solid_base_width);
         }
         for (i = [0:1]) {
             translate([0, plate_height/2 - top_to_first_hole - i*hole_spacing, 0])
@@ -156,4 +156,4 @@ module backplate(solid_base_height=15, solid_base_depth=5, solid_base_taper=1.2)
 }
 
 // Render the backplate
-backplate(15);
+backplate(15, solid_base_width = 12);
