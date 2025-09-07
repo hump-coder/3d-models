@@ -3,6 +3,9 @@ use <base_model.scad>
 
 $fn=50;
 
+
+
+
 module import_model_base(height=0)
 {  
     difference() {
@@ -10,6 +13,12 @@ module import_model_base(height=0)
             translate([100,80,43.26])
                 rotate([0,0,45])
                     cube([20, 40, 76.5], center=true);
+    }
+    
+    if(false){
+        translate([60,60,0])
+            rotate([0,0,45])    
+                import("SS4H-ZRG Case v. 1.0/Case.3mf");
     }
 }
 
@@ -30,7 +39,7 @@ module sensor(height = 0, show_sensor=false)
     translate([0, 0, -2])
         rotate([90,0,45])
            rotate([0,90,0])
-            backplate(30, solid_base_width = 17);
+            backplate(28, solid_base_width = 17);
     }
 }
 
@@ -44,7 +53,7 @@ module screw_hole()
 
 module tuya_base() {
     import_model_base();      
-    sensor(16, false);
+    sensor(14, false);
 }
 
 
@@ -54,7 +63,7 @@ module build_base() {
     difference() 
     {
         tuya_base();
-        translate([90, 90, 41.5+height])        
+//        translate([0, 0, 0])        
         screw_hole();
     }
 }

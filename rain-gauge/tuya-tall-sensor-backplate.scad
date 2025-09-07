@@ -125,11 +125,14 @@ module solid_base(base_height=0, base_width=20, base_depth=5, base_taper=1.2)
 {
     base_y = -plate_height/2 - base_height/2 + wide_height - 2;
 
+    minkowski() {
     // Extrude the base downward and scale it to create the taper
-    translate([0, base_y, 0])
-        linear_extrude(height = base_depth, scale = [base_taper, base_taper])
-            offset(delta = (back_support_offset + back_support_wide_offset))
-                square([base_width, base_height], center=true);
+        translate([0, base_y, 0])
+            linear_extrude(height = base_depth, scale = [base_taper, base_taper])
+                offset(delta = (back_support_offset + back_support_wide_offset))
+                    square([base_width, base_height], center=true);
+        sphere(r = 1); // The rounding element
+    }
 }
 
 // Create the 3D plate and remove the countersunk screw holes
